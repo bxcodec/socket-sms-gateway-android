@@ -2,8 +2,7 @@
 var express = require('express'),
 	socketioJwt = require('socketio-jwt'),
 	events = require('events'),
-	http = require ('http').Server(app),
-	io = require ('socket.io')(http),
+	
 	app = new express(),
 	emitter = new events.EventEmitter(),
 	config = require(__base+ '/config/environtment/config'),
@@ -13,33 +12,43 @@ app.get('/', function (req,res) {
 	res.sendFile(__base+"/index.html");
 });
 
-// io.set('authorization', socketioJwt.authorize({
-//   secret: "secretuser",
-//   handshake: true
-// }));
-
+http = require ('http').Server(app);
+io = require ('socket.io').listen(http);
 var driver = io.of('/phone');
+
+
 
 driver.on ('connection' , function(socket) {	
 
-
-
+	// socket.emit("ready", {data:"Ready"});
 	// var decoded_token = socket.client.request.decoded_token;
 	console.log( JSON.stringify(socket.id)+ 'connected');
 
 	
 	socket.on('incoming_sms', function(data){
 		console.log(data);
-
-		socket.emit("incoming_sms_notif")
+		emitter.emit("incoming_sms_notif",{data:data});
 	});
+
+	emitter.on("incoming_sms_notif", function (data) {
+		// body...
+		socket.emit("incoming_sms_notif",data);
+	})
 
 	socket.on('send_sms', function (data) {
-		socket.emit("send_sms_to_phone")
+		
+		console.log(data);
+		emitter.emit("send_sms_to_phone", {data:data});
 	});
 
+
+	emitter.on("send_sms_to_phone", function (data) {
+		// body...
+		socket.emit("send_sms_to_phone",data);
+	})
+
 	socket.on('disconnect', function() {
-		console.log(decoded_token.data.phone_number+ " disconnected from Server");
+		console.log(socket.id+ " disconnected from Server");
 	});
 
 
