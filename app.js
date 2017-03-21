@@ -13,20 +13,24 @@ app.get('/', function (req,res) {
 	res.sendFile(__base+"/index.html");
 });
 
-io.set('authorization', socketioJwt.authorize({
-  secret: "secretuser",
-  handshake: true
-}));
+// io.set('authorization', socketioJwt.authorize({
+//   secret: "secretuser",
+//   handshake: true
+// }));
 
 var driver = io.of('/phone');
 
 driver.on ('connection' , function(socket) {	
 
-	var decoded_token = socket.client.request.decoded_token;
-	console.log(decoded_token.data.phone_number, 'connected');
+
+
+	// var decoded_token = socket.client.request.decoded_token;
+	console.log( JSON.stringify(socket.id)+ 'connected');
 
 	
 	socket.on('incoming_sms', function(data){
+		console.log(data);
+
 		socket.emit("incoming_sms_notif")
 	});
 
