@@ -1,35 +1,17 @@
-/* Server Setting*/
-// var config = require(__dirname + '/../config.js');
-var express = require('express');
-var socketioJwt = require('socketio-jwt');
-var events = require('events');
-var http = require ('http').Server(app)
 
-var io = require ('socket.io')(http)
-
-
-var app = new express();
-var emitter = new events.EventEmitter();
-// var morgan = require ('morgan');
-
-var config = require(__base+ '/config/environtment/config');
-
-var env = process.env.NODE_ENV || "development";
-
-
-
-
+var express = require('express'),
+	socketioJwt = require('socketio-jwt'),
+	events = require('events'),
+	http = require ('http').Server(app),
+	io = require ('socket.io')(http),
+	app = new express(),
+	emitter = new events.EventEmitter(),
+	config = require(__base+ '/config/environtment/config'),
+	env = process.env.NODE_ENV || "development";
 
 app.get('/', function (req,res) {
 	res.sendFile(__base+"/index.html");
 });
-
-
-
-
-
-
-
 
 io.set('authorization', socketioJwt.authorize({
   secret: "secretuser",
@@ -37,10 +19,6 @@ io.set('authorization', socketioJwt.authorize({
 }));
 
 var driver = io.of('/phone');
-
-
-
-
 
 driver.on ('connection' , function(socket) {	
 

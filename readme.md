@@ -36,7 +36,7 @@ You can also email <iman.tumorang@gmail.com> or file an [Issue](https://github.c
 Run your project using this command
 
 ```bash
-# download the project into $GOPATH/src
+
 git clone https://github.com/bxcodec/backend-sms-gateway-android.git
 cd path_of_the_project
 
